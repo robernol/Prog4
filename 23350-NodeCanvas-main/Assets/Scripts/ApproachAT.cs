@@ -8,7 +8,9 @@ namespace NodeCanvas.Tasks.Actions {
 	public class ApproachAT : ActionTask {
 
 		public BBParameter<float> speed;
-		public Transform target;
+		public BBParameter<Transform> target;
+
+        private Blackboard lighthouseBB;
 
         //Use for initialization. This is called only once in the lifetime of the task.
         //Return null if init was successfull. Return an error string otherwise
@@ -32,7 +34,7 @@ namespace NodeCanvas.Tasks.Actions {
 		//Called once per frame while the action is active.
 		protected override void OnUpdate() {
 			//move towards target transform
-			Vector3 directionToMove = target.position - agent.transform.position;
+			Vector3 directionToMove = target.value.position - agent.transform.position;
 			agent.transform.position += directionToMove.normalized * speed.value * Time.deltaTime;
 
 			float distanceToTarget = directionToMove.magnitude;
