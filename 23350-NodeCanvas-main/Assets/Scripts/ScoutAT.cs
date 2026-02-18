@@ -10,7 +10,7 @@ namespace NodeCanvas.Tasks.Actions {
 
         public NavMeshAgent navAgent;
         public Vector3 targetPosition;
-		bool scouted;
+		//bool scouted;
 		float timer;
 
         //Use for initialization. This is called only once in the lifetime of the task.
@@ -25,7 +25,7 @@ namespace NodeCanvas.Tasks.Actions {
 		protected override void OnExecute() {
 			targetPosition = new Vector3(Random.Range(-3f, 3f), 0, Random.Range(-3f, 3f)) + agent.transform.position;
             navAgent.SetDestination( targetPosition );
-			scouted = false;
+			//scouted = false;
 			timer = Time.time + 10f;
         }
 
@@ -39,7 +39,7 @@ namespace NodeCanvas.Tasks.Actions {
 			else
 			{
 				if ((Mathf.Abs(targetPosition.x - agent.transform.position.x) < 0.5) && (Mathf.Abs(targetPosition.y - agent.transform.position.y) < 0.5)){
-					scouted = true;
+					//scouted = true;
 					EndAction(true);
                 }
 			}
