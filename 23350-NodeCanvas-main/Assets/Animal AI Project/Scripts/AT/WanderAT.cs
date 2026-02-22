@@ -15,10 +15,12 @@ namespace NodeCanvas.Tasks.Actions
         public BBParameter<int> randomActionBB;
 
         private NavMeshAgent navAgent;
+        float timer, interval;
 
         protected override string OnInit()
         {
             navAgent = agent.GetComponent<NavMeshAgent>();
+            interval = 0.005f;
             return null;
         }
 
@@ -65,18 +67,29 @@ namespace NodeCanvas.Tasks.Actions
                 SetDestination();
             }
 
-            int randomChance = Random.Range(0, 5000); //every update, there is a 1/5000 chance of Rhyhorn wanting to headbutt a tree, and a 2/5000 chance of him wanting to greet a friend.
-            if (randomChance == 1) //if a 1 is rolled, he will headbutt a tree.
+            if (Time.time > timer || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) 
             {
-                randomActionBB.value = 1; //represents the chosen action
-                EndAction(true);
+                int randomChance = Random.Range(0, 5000); //every 0.02 seconds, there is a 1/5000 chance of Rhyhorn wanting to headbutt a tree, and a 2/5000 chance of him wanting to greet a friend.
+                if (Input.GetMouseButtonDown(0)) //if the player left clicks, rhyhorn will want to greet a friend.
+                {
+                    randomChance = 2;
+                }
+                if (Input.GetMouseButtonDown(1)) //if the player right clicks, rhyhorn will want to headbutt a tree.
+                {
+                    randomChance = 1;
+                }
+                if (randomChance == 1) //if a 1 is rolled, he will headbutt a tree.
+                {
+                    randomActionBB.value = 1; //represents the chosen action
+                    EndAction(true);
+                }
+                else if (randomChance == 2 || randomChance == 3) //if a 2 or 3 is rolled, he will greet a friend.
+                {
+                    randomActionBB.value = 2;
+                    EndAction(true);
+                }
+                timer = Time.time + interval; //resets timer
             }
-            else if (randomChance == 2 || randomChance == 3) //if a 2 or 3 is rolled, he will greet a friend.
-            {
-                randomActionBB.value = 2;
-                EndAction(true);
-            }
-
         }
 
         protected override void OnStop()
