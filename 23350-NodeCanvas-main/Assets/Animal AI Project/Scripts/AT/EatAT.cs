@@ -1,35 +1,56 @@
 using NodeCanvas.Framework;
 using ParadoxNotion.Design;
+using System.Collections.Generic;
+using UnityEngine;
 
 
 namespace NodeCanvas.Tasks.Actions {
 
 	public class EatAT : ActionTask {
 
-		//Use for initialization. This is called only once in the lifetime of the task.
-		//Return null if init was successfull. Return an error string otherwise
-		protected override string OnInit() {
+		public BBParameter<GameObject> BerryBB;
+		public BBParameter<List<GameObject>> BerryListBB;
+        public BBParameter<Transform> HeadBB, JawBB;
+		public BBParameter<float> EnergyBB;
+        float timer;
+
+		public AnimationCurve eatCurve;
+
+        protected override string OnInit() {
 			return null;
 		}
 
-		//This is called once each time the task is enabled.
-		//Call EndAction() to mark the action as finished, either in success or failure.
-		//EndAction can be called from anywhere.
 		protected override void OnExecute() {
-			EndAction(true);
-		}
+			agent.transform.LookAt(BerryBB.value.transform); //when the agent begins eating, looks at the berry
+            timer = Time.time + 3f; //will eat for 3 seconds
+        }
 
-		//Called once per frame while the action is active.
 		protected override void OnUpdate() {
-			
-		}
+			HeadBB.value.localEulerAngles = new Vector3(eatCurve.Evaluate (timer - Time.time) * 10, 0, 0); //head bobs up and down while eating
+			JawBB.value.localEulerAngles = new Vector3(eatCurve.Evaluate(timer - Time.time) * 20, 0, 0); //jaw SHOULD open and close while eating, doesn't for some reason I didn't feel like investigating
+            if (Time.time > timer)
+			{
+				for (int i = 0; i < BerryListBB.value.Count; i++) //goes through the berry list to find where the current berry is
+				{
+					if (null != BerryListBB.value[i]) //check if it is null first to avoid errors
+                    {
+                        if (BerryListBB.value[i] == BerryBB.value) //if it finds the berry in the list, removes it and breaks out of the loop
+                        {
+                            BerryListBB.value.RemoveAt(i);
+                            break;
+                        }
+                    }
+					
+                }
+				
+                EndAction(true);
+            }
+        }
 
-		//Called when the task is disabled.
 		protected override void OnStop() {
-			
-		}
+            EnergyBB.value += 10; //when the berry has been eaten, replenishes 10 energy
+        }
 
-		//Called when the task is paused.
 		protected override void OnPause() {
 			
 		}

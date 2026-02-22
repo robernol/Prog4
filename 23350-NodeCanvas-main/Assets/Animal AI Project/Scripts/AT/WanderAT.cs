@@ -8,28 +8,23 @@ using UnityEngine.AI;
 namespace NodeCanvas.Tasks.Actions
 {
 
-    public class WanderAT : ActionTask
+    public class WanderAT : ActionTask //Repurposed from the in class example
     {
 
-        public float wanderRadius;
-        public float wanderCircleDistance;
+        public float wanderRadius, wanderCircleDistance;
+        public BBParameter<int> randomActionBB;
 
         private NavMeshAgent navAgent;
 
-
-        //Use for initialization. This is called only once in the lifetime of the task.
-        //Return null if init was successfull. Return an error string otherwise
         protected override string OnInit()
         {
             navAgent = agent.GetComponent<NavMeshAgent>();
             return null;
         }
 
-        //This is called once each time the task is enabled.
-        //Call EndAction() to mark the action as finished, either in success or failure.
-        //EndAction can be called from anywhere.
         protected override void OnExecute()
         {
+            navAgent.speed = 1.5f;
             SetDestination();
         }
 
@@ -62,7 +57,6 @@ namespace NodeCanvas.Tasks.Actions
             Debug.DrawLine(agent.transform.position, currentDestination, Color.magenta, pathUpdateFrequency);
         }
 
-        //Called once per frame while the action is active.
         protected override void OnUpdate()
         {
             if (navAgent.remainingDistance < 0.25f &&
@@ -70,15 +64,26 @@ namespace NodeCanvas.Tasks.Actions
             {
                 SetDestination();
             }
+
+            int randomChance = Random.Range(0, 5000); //every update, there is a 1/5000 chance of Rhyhorn wanting to headbutt a tree, and a 2/5000 chance of him wanting to greet a friend.
+            if (randomChance == 1) //if a 1 is rolled, he will headbutt a tree.
+            {
+                randomActionBB.value = 1; //represents the chosen action
+                EndAction(true);
+            }
+            else if (randomChance == 2 || randomChance == 3) //if a 2 or 3 is rolled, he will greet a friend.
+            {
+                randomActionBB.value = 2;
+                EndAction(true);
+            }
+
         }
 
-        //Called when the task is disabled.
         protected override void OnStop()
         {
 
         }
 
-        //Called when the task is paused.
         protected override void OnPause()
         {
 

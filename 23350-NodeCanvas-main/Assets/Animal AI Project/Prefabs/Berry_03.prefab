@@ -600,9 +600,9 @@ GameObject:
   - component: {fileID: 6094111829472323831}
   - component: {fileID: 5184066853862077216}
   - component: {fileID: -657226299647709896}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Berry_03
-  m_TagString: Untagged
+  m_TagString: Berry
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

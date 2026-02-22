@@ -72,6 +72,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Berry_04
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ef564a7097fb30f45b6a25193a8e52c4, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ef564a7097fb30f45b6a25193a8e52c4, type: 3}
+      propertyPath: m_TagString
+      value: Berry
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

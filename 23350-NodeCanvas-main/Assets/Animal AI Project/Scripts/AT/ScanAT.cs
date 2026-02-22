@@ -1,55 +1,45 @@
 using NodeCanvas.Framework;
 using ParadoxNotion.Design;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace NodeCanvas.Tasks.Actions {
 
-	public class ScanAT : ActionTask {
+	public class ScanAT : ActionTask { //repurposed from the in class example
 		public Color scanColour;
 		public int numberOfScanCirclePoints;
 		public LayerMask targetMask;
 		public float scanRadius = 3f;
         public float scanSpeed = 1f;
 		public float baseRadius = 3f;
-		public BBParameter<Transform> targetTransform;
+		public BBParameter<GameObject> Berry;
+		public BBParameter<List<GameObject>> BerryList;
 
-        //Use for initialization. This is called only once in the lifetime of the task.
-        //Return null if init was successfull. Return an error string otherwise
         protected override string OnInit() {
 			return null;
 		}
 
-		//This is called once each time the task is enabled.
-		//Call EndAction() to mark the action as finished, either in success or failure.
-		//EndAction can be called from anywhere.
 		protected override void OnExecute() {
 			scanRadius = baseRadius;
 		}
 
-		//Called once per frame while the action is active.
-		protected override void OnUpdate() {
-			DrawCircle(agent.transform.position, scanRadius, scanColour, numberOfScanCirclePoints);
+		protected override void OnUpdate() { //no longer increases range, instead scans continuously at a set range
+            DrawCircle(agent.transform.position, scanRadius, scanColour, numberOfScanCirclePoints);
 
 			Collider[] objectsInRange = Physics.OverlapSphere(agent.transform.position, scanRadius, targetMask);
 
-			scanRadius += scanSpeed * Time.deltaTime;
-
-            foreach (Collider objectInRange in objectsInRange)
+            foreach (Collider objectInRange in objectsInRange) //upon finding a berry within range
             {
-				Blackboard lighthouseBB = objectInRange.GetComponentInParent<Blackboard>();
-				if (lighthouseBB == null)
-				{
-					Debug.LogError("Failed to get lighthouse blackboard off of lighthouse layered object[\"+objectInRange.gameObject.name+\"].");
+				if (BerryList.value.Contains(objectInRange.gameObject)) //only adds each berry to the list once, if it is already in the list it is ignored
+                {
 					continue;
-				}
-				float repairValue = lighthouseBB.GetVariableValue<float>("repairValue");
-
-                if(repairValue <= 0)
-				{
-					targetTransform.value = lighthouseBB.GetVariableValue<Transform>("workpad");
-
-					EndAction(true);
-				}
+                }
+				else {
+                    Berry.value = objectInRange.gameObject; //sets the current berry to the one found
+                    BerryList.value.Add(objectInRange.gameObject); //adds to the list of found berries
+                }
+					
             }
 
         }
@@ -70,12 +60,10 @@ namespace NodeCanvas.Tasks.Actions {
 			
 		}
 
-		//Called when the task is disabled.
 		protected override void OnStop() {
 			
 		}
 
-		//Called when the task is paused.
 		protected override void OnPause() {
 			
 		}

@@ -2,13 +2,10 @@ using UnityEngine;
 
 public class Spin : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-
-    // Update is called once per frame
     void Update()
     {
         Vector3 temp = transform.eulerAngles;
-        temp.y = Random.Range(0f, 365f);
+        temp.y = Random.Range(0f, 365f); //randomly rotates a pivot point for the berry spawners, so the berries will spawn randomly along a fixed radius around the tree
         transform.eulerAngles = temp;
     }
 }

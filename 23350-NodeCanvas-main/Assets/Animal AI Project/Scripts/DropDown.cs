@@ -3,7 +3,7 @@ using UnityEngine.Rendering.Universal;
 
 public class DropDown : MonoBehaviour
 {
-    public AnimationCurve drop;
+    public AnimationCurve drop; //Curve for the drop to follow
     public float startYPos, timer;
     public bool dropped;
     void Start()
@@ -12,30 +12,26 @@ public class DropDown : MonoBehaviour
         dropped = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.DownArrow) && (dropped == false) && (timer < Time.time))
+        //When the dropped boolean is set to true using the FSM and the timer is set to 1, the bug will drop down following the animation curve.
+        if ((dropped) && (timer < Time.time))
         {
-            timer = Time.time + 4;
-            dropped = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.UpArrow) && (dropped == true) && (timer < Time.time))
-        {
-            timer = Time.time + 4;
+            //after 1 second, the timer will be set to 3 seconds and dropped is set back to false. The bug will stay in place for 2 seonds before it rises back up following the curve in inverse.
+            timer = Time.time + 3;
             dropped = false;
+            
         }
 
         Vector3 temp = transform.position;
 
         if (timer > Time.time)
         {
-            if (dropped)
+            if (dropped) //following the curve normally for dropping down
             {
-                temp.y = startYPos + drop.Evaluate(3 - (timer - Time.time));
+                temp.y = startYPos + drop.Evaluate(1 - (timer - Time.time));
             }
-            else
+            else //following the curve in inverse for rising back up
             {
                 temp.y = startYPos + drop.Evaluate(timer - Time.time);
             }
