@@ -27,7 +27,7 @@ namespace NodeCanvas.Tasks.Actions {
 
 		protected override void OnUpdate() {
 			HeadBB.value.localEulerAngles = new Vector3(eatCurve.Evaluate (timer - Time.time) * 10, 0, 0); //head bobs up and down while eating
-			JawBB.value.localEulerAngles = new Vector3(eatCurve.Evaluate(timer - Time.time) * 20, 0, 0); //jaw SHOULD open and close while eating, doesn't for some reason I didn't feel like investigating
+			JawBB.value.localEulerAngles = new Vector3(eatCurve.Evaluate(timer - Time.time) * 20, 0, 0); //jaw opens and closes while eating
             if (Time.time > timer)
 			{
 				for (int i = 0; i < BerryListBB.value.Count; i++) //goes through the berry list to find where the current berry is
